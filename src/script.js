@@ -21,7 +21,6 @@ try {
 } catch (error) {
   console.log(`Error! Status: ${error.status}. Rate limit remaining: ${error.headers["x-ratelimit-remaining"]}. Message: ${error.response.data.message}`)
 }
-const commitSHAs = result.data.map(commit => commit.sha).reverse();
 
 
 
@@ -29,6 +28,17 @@ const commitSHAs = result.data.map(commit => commit.sha).reverse();
 
 
 
+
+
+
+
+
+
+
+
+
+
+const commitSHAs = result.data.map(commit => commit.sha);
 
 
 async function getCommitChanges(commitSHAs) {
@@ -38,16 +48,16 @@ async function getCommitChanges(commitSHAs) {
       repo: repo,
       commit_sha: commitSHA
     });
-    document.body.innerHTML += "<h1>" + commit.data.commit.message + "</h1>";
     commit.data.files.forEach(file => {
       if ((file.filename.slice(0, 6)) != "node_m" && file.patch)
       {
         console.log(`Changes to ${file.filename}:`);
         console.log(file.patch);
-        document.body.innerHTML += "<p>" + file.patch + "</p>";
-
+        document.body.innerHTML = "<p style='white-space:pre'>" + file.patch + "</p>"+ document.body.innerHTML;
+        
       }
     });
+    document.body.innerHTML = "<h1>" + commit.data.commit.message + "</h1>" + document.body.innerHTML;
     // throw new Error("my error message");
 
   });
